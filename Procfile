@@ -1,1 +1,1 @@
-renderer: vendor/phantomjs/bin/phantomjs screenshot.coffee
+web: vendor/phantomjs/bin/phantomjs screenshot.coffee
