@@ -2,11 +2,7 @@ fs      = require('fs')
 sys     = require('system')
 webpage = require('webpage')
 
-if sys.args.length < 2
-  console.log "Usage: phantomjs screenshot.coffee <push-server-url> [screen-width] [screen-height] [image-width] [image-height] [wait]"
-  return
-
-pushServerUrl = sys.args[1]
+pushServerUrl = sys.args[1] || "test.com"
 screenSize =
   width : sys.args[2] || 1024
   height : sys.args[3] || 768
