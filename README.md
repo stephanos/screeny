@@ -6,7 +6,7 @@ Heroku-hosted screenshot server
 
 ## Getting Started
 
-#### Create a new Heroku application.
+#### Create a new Heroku application
 
 ```shell
 $ heroku create --stack cedar --buildpack http://github.com/stomita/heroku-buildpack-phantomjs.git
@@ -18,6 +18,9 @@ $ heroku config:set SECRET=<mysecret>
 ```
 
 #### Push repository to Heroku
+```shell
+$ git push heroku master
+```
 
 #### Request screenshot
 
