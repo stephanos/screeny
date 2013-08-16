@@ -10,6 +10,7 @@ exports.render = (opts, callback) ->
       if status is 'success'
         {
           status: status
+          format: 'png'
           data: renderPage page
         }
       else
