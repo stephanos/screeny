@@ -1,1 +1,1 @@
-web: phantomjs screenshot.coffee
+web: start.sh $PORT $SECRET
