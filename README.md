@@ -25,5 +25,5 @@ $ git push heroku master
 #### Request screenshot
 
 ```shell
-$ curl http://myscreenshotapp.heroku.com/snap?url=http://www.google.com&auth=<mysecret>&postback=http://...
+$ curl http://myscreenshotapp.heroku.com/image?url=http://www.google.com&auth=<mysecret>&postback=http://...
 ```

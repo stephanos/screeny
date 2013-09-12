@@ -1,5 +1,5 @@
 conf = require('./config')
-server = require('./server')
+web = require('./web')
 
 # LAUNCH SERVER
-server.create(conf.port, conf.token)
+web.create conf.port, conf.token

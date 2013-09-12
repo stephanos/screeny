@@ -4,8 +4,20 @@ webpage = require('webpage')
 # ============
 # ==== EXPORTS
 
-exports.render = (opts, callback) ->
+exports.renderHtml = (opts, callback) ->
   loadPage opts, (status, page) ->
+    success = status is 'success'
+    data =
+      if success
+        page.content
+      else
+        ""
+
+    callback success, JSON.stringify(data)
+
+exports.renderImage = (opts, callback) ->
+  loadPage opts, (status, page) ->
+    success = status is 'success'
     data =
       if status is 'success'
         {
@@ -18,7 +30,7 @@ exports.render = (opts, callback) ->
           status: status
         }
 
-    callback JSON.stringify(data)
+    callback success, JSON.stringify(data)
 
 
 # ============

@@ -1,1 +1,1 @@
-web: start.sh $PORT $SECRET
+web: sh start.sh $PORT $SECRET
