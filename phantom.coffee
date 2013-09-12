@@ -11,18 +11,18 @@ exports.renderHtml = (opts, callback) ->
       if success
         page.content
       else
-        ""
+        ''
 
-    callback success, JSON.stringify(data)
+    callback success, data
 
 exports.renderImage = (opts, callback) ->
   loadPage opts, (status, page) ->
     success = status is 'success'
     data =
-      if status is 'success'
+      if success
         {
-          status: status
           format: 'png'
+          status: status
           data: renderPage page
         }
       else
@@ -55,9 +55,13 @@ loadPage = (opts, callback) ->
     trace.forEach (item) -> console.log '  ', item.file, ':', item.line
   ###
 
-  util.log 'loading web page: ' + url
+  timeout = opts.timeout || 3000 # default: 3s
+  util.log 'loading web page: ' + url + ' (timeout: ' + timeout + 'ms)'
+
   page.open url, (status) ->
-    callback status, page
+    window.setTimeout () ->
+      callback status, page
+    , timeout
 
 renderPage = (page) ->
   data = page.renderBase64('PNG')

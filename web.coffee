@@ -3,12 +3,21 @@ phantom = require('./phantom')
 webpage = require('webpage')
 webserver = require('webserver').create()
 
+conf = require('./config')
+port = conf.port
+token = conf.token
+
 # ============
 # ==== EXPORTS
 
-exports.create = (port, token) ->
-  util.log('initiating web server at :' + port)
+exports.create = ->
+  util.log('initiating web server at port ' + port)
   webserver.listen port, (request, response) ->
+    reply = (status, content) ->
+      response.statusCode = status
+      response.write content
+      response.close()
+
     try
       url = request.url
       qry = qryVars(url)
@@ -18,45 +27,37 @@ exports.create = (port, token) ->
       # check authorization
       auth = headers['Authorization'] || qry['auth'] || ''
       if auth.indexOf(token) == -1
-        response.statusCode = 401
-        response.write 'Unauthorized'
+        reply 401, 'Just what do you think you\'re doing, Dave?'
         return
 
-      postback = qry['postback']
-      reply = (success, data) ->
+      postback = qry['postback'] || ''
+      util.log postback
+      replyData = (success, data) ->
         status = if success then 200 else 500
-        if postback # async
-          if data
-            POST postback, data # callback reply
-          else
-            response.statusCode = status
-            response.write 'Okay' # defer reply
-        else if data
-          response.statusCode = status
-          response.write data # reply sync
+        if postback != ''
+          POST postback, data # reply async
+        else
+          reply status, data # reply sync
+
 
       # GET /image
       if method == 'GET' && url.indexOf('/image') == 0
-        phantom.render qry, reply
-        reply true
+        phantom.renderImage qry, replyData
+        if postback != ''
+          reply status, 'Okay'
 
       # GET /html
       else if method == 'GET' && url.indexOf('/html') == 0
-        phantom.render qry, reply
-        reply true
+        phantom.renderHtml qry, replyData
+        if postback != ''
+          reply status, 'Okay'
 
       else
-        response.statusCode = 404
-        response.write 'Not Found'
-
-      response.setHeader 'Authorization', 'Token ' + token
+        reply 404, 'Not Found'
 
     catch error
       util.log error
-      response.statusCode = 500
-      response.write error
-
-    response.close()
+      reply 500, error
 
 # ============
 # ==== HELPERS
@@ -71,6 +72,7 @@ qryVars = (url) ->
 
 POST = (url, data) ->
   if url
+    #response.setHeader 'Authorization', 'Token ' + token
     page = webpage.create()
     util.log 'POST to: ' + url
     page.open url, 'post', data, (status) ->
