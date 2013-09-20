@@ -1,5 +1,5 @@
-screeny
-=======
+shotr
+=====
 
 Heroku-hosted screenshot server
 
